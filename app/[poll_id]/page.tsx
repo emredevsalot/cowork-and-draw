@@ -11,14 +11,24 @@ export default async function PollPage({
 }) {
   const pollId = params.poll_id;
 
-  // 🎈 TODO: send a GET request to the PartyKit room
+  // 🎈✅ TODO: send a GET request to the PartyKit room
+  const req = await fetch(`${PARTYKIT_URL}/party/${pollId}`, {
+    method: "GET",
+    next: {
+      revalidate: 0,
+    },
+  });
 
-  // 🎈 TODO: replace the mock data
-  const poll = {
-    title: "Mock poll question?",
-    options: ["Mock option A", "Mock option B"],
-    votes: [0, 0],
-  };
+  if (!req.ok) {
+    if (req.status === 404) {
+      notFound();
+    } else {
+      throw new Error("Something went wrong.");
+    }
+  }
+
+  // 🎈✅ TODO: replace the mock data
+  const poll = (await req.json()) as Poll;
 
   return (
     <>
