@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #4158d0;
+  background-image: linear-gradient(
+    43deg,
+    #4158d0 0%,
+    #c850c0 46%,
+    #ffcc70 100%
+  );
+
+  color: black;
+}
+
+@layer components {
+  .button-dark {
+    background-image: radial-gradient(
+      circle 975px at 2.6% 48.3%,
+      rgba(0, 8, 120, 1) 0%,
+      rgba(95, 184, 224, 1) 99.7%
+    );
+  }
+
+  .button-light {
+    background-image: linear-gradient(
+      174.2deg,
+      rgba(255, 244, 228, 1) 7.1%,
+      rgba(240, 246, 238, 1) 67.4%
+    );
+  }
+
+  .vote-bg {
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+
+  .vote-bg-own {
+    background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+
+  .vote-bg-winning {
+    background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+  }
+}
