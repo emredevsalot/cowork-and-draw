@@ -21,6 +21,16 @@ export default class Server implements Party.Server {
 
     return new Response("Not found", { status: 404 });
   }
+
+  async onMessage(message: string) {
+    if (!this.poll) return;
+
+    const event = JSON.parse(message);
+    if (event.type === "vote") {
+      this.poll.votes![event.option] += 1;
+      this.party.broadcast(JSON.stringify(this.poll));
+    }
+  }
 }
 
 Server satisfies Party.Worker;
