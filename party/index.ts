@@ -10,6 +10,7 @@ export default class Server implements Party.Server {
     if (req.method === "POST") {
       const poll = (await req.json()) as Poll;
       this.poll = { ...poll, votes: poll.options.map(() => 0) };
+      this.savePoll();
     }
 
     if (this.poll) {
@@ -29,7 +30,18 @@ export default class Server implements Party.Server {
     if (event.type === "vote") {
       this.poll.votes![event.option] += 1;
       this.party.broadcast(JSON.stringify(this.poll));
+      this.savePoll();
     }
+  }
+
+  async savePoll() {
+    if (this.poll) {
+      await this.party.storage.put<Poll>("poll", this.poll);
+    }
+  }
+
+  async onStart() {
+    this.poll = await this.party.storage.get<Poll>("poll");
   }
 }
 
