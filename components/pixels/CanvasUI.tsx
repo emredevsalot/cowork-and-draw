@@ -4,7 +4,7 @@ import Pixel from "./Pixel";
 
 // This component represents a canvas with pixels to be revealed.
 // It handles the reveal and reset actions.
-function Canvas() {
+function CanvasUI() {
   // Size of the canvas
   const [rowCount] = useState<number>(2);
   const [columnCount] = useState<number>(2);
@@ -74,4 +74,4 @@ function Canvas() {
   );
 }
 
-export default Canvas;
+export default CanvasUI;
