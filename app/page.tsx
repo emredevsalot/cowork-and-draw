@@ -1,36 +1,31 @@
-import Button from "@/components/Button";
-import PollMaker from "@/components/PollMaker";
-import Balloon from "@/components/Balloon";
-import { Poll } from "@/app/types";
 import { redirect } from "next/navigation";
 import { PARTYKIT_URL } from "./env";
-import Input from "@/components/Input";
+import type { Canvas } from "./types";
+import CanvasMaker from "@/components/pixels/CanvasMaker";
 
 const randomId = () => Math.random().toString(36).substring(2, 10);
 
 export default function Home() {
-  async function createPoll(formData: FormData) {
+  async function createCanvas(formData: FormData) {
     "use server";
 
-    const title = formData.get("title")?.toString() ?? "Anonymous poll";
-    const options: string[] = [];
-
-    for (const [key, value] of formData.entries()) {
-      if (key.startsWith("option-") && value.toString().trim().length > 0) {
-        options.push(value.toString());
-      }
-    }
+    const title = formData.get("title")?.toString() || "Anonymous Canvas";
+    const rowCount = parseInt(formData.get("rowCount")?.toString() || "3");
+    const columnCount = parseInt(
+      formData.get("columnCount")?.toString() || "3"
+    );
 
     const id = randomId();
-    const poll: Poll = {
+    const canvas: Canvas = {
       title,
-      options,
+      rowCount,
+      columnCount,
+      revealedPixels: 0,
     };
 
-    // 🎈✅ TODO: send a POST request to a PartyKit room
     await fetch(`${PARTYKIT_URL}/party/${id}`, {
       method: "POST",
-      body: JSON.stringify(poll),
+      body: JSON.stringify(canvas),
       headers: {
         "Content-Type": "application/json",
       },
@@ -38,15 +33,14 @@ export default function Home() {
 
     redirect(`/${id}`);
   }
-
   return (
-    <>
-      <form action={createPoll}>
+    <div className="container mx-auto py-4">
+      <h1 className="text-2xl font-bold mb-4">Pixels</h1>
+      <form action={createCanvas}>
         <div className="flex flex-col space-y-6">
-          <PollMaker />
+          <CanvasMaker />
         </div>
       </form>
-      <Balloon />
-    </>
+    </div>
   );
 }

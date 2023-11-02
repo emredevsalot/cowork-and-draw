@@ -1,5 +1,6 @@
-export type Poll = {
+export type Canvas = {
   title: string;
-  options: string[];
-  votes?: number[];
+  rowCount: number;
+  columnCount: number;
+  revealedPixels: number;
 };
