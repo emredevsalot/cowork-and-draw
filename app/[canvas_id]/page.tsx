@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { PARTYKIT_URL } from "@/app/env";
 import type { Canvas } from "@/app/types";
 import CanvasUI from "@/components/pixels/CanvasUI";
+import Timer from "@/components/Timer";
 
 export default async function PixelsPage({
   params,
@@ -31,12 +32,19 @@ export default async function PixelsPage({
   return (
     <div className="container mx-auto py-4">
       <h1 className="text-2xl font-bold mb-4">Pixels - {canvas.title}</h1>
-      <CanvasUI
-        id={canvasId}
-        rowCount={canvas.rowCount}
-        columnCount={canvas.columnCount}
-        initialRevealedPixels={canvas.revealedPixels}
-      />
+      <div className="flex w-full flex-grow">
+        <div className="w-full">
+          <Timer />
+        </div>
+        <div className="w-full">
+          <CanvasUI
+            id={canvasId}
+            rowCount={canvas.rowCount}
+            columnCount={canvas.columnCount}
+            initialRevealedPixels={canvas.revealedPixels}
+          />
+        </div>
+      </div>
     </div>
   );
 }
