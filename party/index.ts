@@ -1,20 +1,20 @@
 import type * as Party from "partykit/server";
-import type { Poll } from "@/app/types";
+import type { Canvas } from "@/app/types";
 
 export default class Server implements Party.Server {
   constructor(readonly party: Party.Party) {}
 
-  poll: Poll | undefined;
+  canvas: Canvas | undefined;
 
   async onRequest(req: Party.Request) {
     if (req.method === "POST") {
-      const poll = (await req.json()) as Poll;
-      this.poll = { ...poll, votes: poll.options.map(() => 0) };
-      this.savePoll();
+      const canvas = (await req.json()) as Canvas;
+      this.canvas = { ...canvas };
+      this.saveCanvas();
     }
 
-    if (this.poll) {
-      return new Response(JSON.stringify(this.poll), {
+    if (this.canvas) {
+      return new Response(JSON.stringify(this.canvas), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
@@ -24,24 +24,28 @@ export default class Server implements Party.Server {
   }
 
   async onMessage(message: string) {
-    if (!this.poll) return;
+    if (!this.canvas) return;
 
     const event = JSON.parse(message);
-    if (event.type === "vote") {
-      this.poll.votes![event.option] += 1;
-      this.party.broadcast(JSON.stringify(this.poll));
-      this.savePoll();
+    if (event.type === "reveal") {
+      this.canvas.revealedPixels += 1;
+      this.party.broadcast(JSON.stringify(this.canvas));
+      this.saveCanvas();
+    } else if (event.type === "reset") {
+      this.canvas.revealedPixels = 0;
+      this.party.broadcast(JSON.stringify(this.canvas));
+      this.saveCanvas();
     }
   }
 
-  async savePoll() {
-    if (this.poll) {
-      await this.party.storage.put<Poll>("poll", this.poll);
+  async saveCanvas() {
+    if (this.canvas) {
+      await this.party.storage.put<Canvas>("canvas", this.canvas);
     }
   }
 
   async onStart() {
-    this.poll = await this.party.storage.get<Poll>("poll");
+    this.canvas = await this.party.storage.get<Canvas>("canvas");
   }
 }
 
