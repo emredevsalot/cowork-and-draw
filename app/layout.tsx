@@ -7,8 +7,8 @@ import { LocalProvider } from "./providers/LocalProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Party poll!",
-  description: "Voting's better with friends 🎈",
+  title: "Cowork and draw!",
+  description: "Work together, draw together.",
 };
 
 export default function RootLayout({
