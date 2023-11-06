@@ -21,7 +21,8 @@ function CanvasUI({
   columnCount: number;
   initialRevealedPixels: number;
 }) {
-  const { storageValues, setStorageValues } = useLocalData();
+  const { storageValues, setStorageValues, storageValuesLoaded } =
+    useLocalData();
 
   // Size of the canvas
   const totalPixels = rowCount * columnCount;
@@ -83,15 +84,19 @@ function CanvasUI({
     );
   }
 
+  if (!storageValuesLoaded) {
+    return <div className=" flex justify-center">Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col items-center">
       {pixels}
       <br />
       <Button
         onClick={handleRevealPixel}
-        disabled={isAllRevealed || storageValues.availablePixelAmount == 0}
+        disabled={isAllRevealed || storageValues?.availablePixelAmount == 0}
       >
-        {"Reveal (" + storageValues.availablePixelAmount + ")"}
+        {"Reveal (" + storageValues?.availablePixelAmount + ")"}
       </Button>
       {isAllRevealed && (
         <div className="flex flex-col items-center mt-4 gap-4">
