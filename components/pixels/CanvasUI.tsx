@@ -3,8 +3,10 @@
 import { useState } from "react";
 import usePartySocket from "partysocket/react";
 import { PARTYKIT_HOST } from "@/app/env";
-import { Canvas } from "@/app/types";
+import { useLocalData } from "@/app/providers/LocalProvider";
+import { Canvas, ILocalData } from "@/app/types";
 import Pixel from "./Pixel";
+import Button from "../Button";
 
 // This component represents a canvas with pixels to be revealed.
 // It handles the reveal and reset actions.
@@ -19,6 +21,8 @@ function CanvasUI({
   columnCount: number;
   initialRevealedPixels: number;
 }) {
+  const { storageValues, setStorageValues } = useLocalData();
+
   // Size of the canvas
   const totalPixels = rowCount * columnCount;
   const [revealedPixels, setRevealedPixels] = useState<number>(
@@ -37,8 +41,17 @@ function CanvasUI({
   });
 
   const handleRevealPixel = () => {
-    if (revealedPixels < totalPixels) {
+    if (
+      revealedPixels < totalPixels &&
+      storageValues.availablePixelAmount > 0
+    ) {
       socket.send(JSON.stringify({ type: "reveal" }));
+
+      const updatedStorageValues: ILocalData = {
+        ...storageValues,
+        availablePixelAmount: storageValues.availablePixelAmount - 1,
+      };
+      setStorageValues(updatedStorageValues);
     }
   };
 
@@ -73,22 +86,17 @@ function CanvasUI({
   return (
     <div className="flex flex-col items-center">
       {pixels}
-      <button
-        className="mt-4 px-4 py-2 bg-green-500 text-white rounded-md"
+      <br />
+      <Button
         onClick={handleRevealPixel}
-        disabled={isAllRevealed}
+        disabled={isAllRevealed || storageValues.availablePixelAmount == 0}
       >
-        Reveal
-      </button>
+        {"Reveal (" + storageValues.availablePixelAmount + ")"}
+      </Button>
       {isAllRevealed && (
-        <div className="flex items-center mt-4 gap-4">
+        <div className="flex flex-col items-center mt-4 gap-4">
           <div>Done.</div>
-          <button
-            className="px-4 py-2 bg-green-500 text-white rounded-md"
-            onClick={handleReset}
-          >
-            Reset
-          </button>
+          <Button onClick={handleReset}>Reset Canvas</Button>
         </div>
       )}
     </div>
