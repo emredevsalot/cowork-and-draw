@@ -12,7 +12,7 @@
     "date-fns": "^2.30.0",
     "next": "13.5.4",
     "next-auth": "^4.24.3",
-    "partysocket": "0.0.12",
+    "partysocket": "^0.0.14",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -23,7 +23,7 @@
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
-    "partykit": "0.0.32",
+    "partykit": "^0.0.33",
     "postcss": "^8",
     "tailwindcss": "^3",
     "typescript": "^5"
