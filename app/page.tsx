@@ -35,9 +35,9 @@ export default function Home() {
   }
   return (
     <div className="container mx-auto py-4">
-      <h1 className="text-2xl font-bold mb-4">Pixels</h1>
+      <h1 className="text-2xl font-bold mb-4">Create a room</h1>
       <form action={createCanvas}>
-        <div className="flex flex-col space-y-6">
+        <div className="flex flex-col space-y-4">
           <CanvasMaker />
         </div>
       </form>

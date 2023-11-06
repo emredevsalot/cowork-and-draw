@@ -15,10 +15,9 @@ export default function CanvasMaker() {
   return (
     <>
       <Input
-        placeholder="Canvas title"
+        placeholder="Room name"
         type="text"
         name="title"
-        className={"text-2xl font-bold"}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
@@ -27,7 +26,6 @@ export default function CanvasMaker() {
         placeholder="Row count"
         type="number"
         name="rowCount"
-        className={"text-xl font-bold"}
         value={rowCount}
         onChange={(e) => setRowCount(e.target.value)}
       />
@@ -36,12 +34,11 @@ export default function CanvasMaker() {
         placeholder="Column count"
         type="number"
         name="columnCount"
-        className={"text-xl font-bold"}
         value={columnCount}
         onChange={(e) => setColumnCount(e.target.value)}
       />
       <Button type="submit" disabled={!canSubmit}>
-        Create canvas
+        Create room
       </Button>
     </>
   );

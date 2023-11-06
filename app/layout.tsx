@@ -19,15 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex w-screen h-screen justify-start">
-          <main className="mx-auto md:my-auto w-screen md:w-2/3 xl:w-1/2 md:h-auto p-4 md:p-8 pb-32">
-            <div className="relative bg-white w-full h-full md:h-auto p-8 md:rounded-xl md:shadow-xl">
-              <LocalProvider>{children}</LocalProvider>
-            </div>
-          </main>
-          <div className="absolute w-full bottom-10 flex flex-col items-center">
-            <Footer />
+        <main className="mx-auto md:my-auto w-screen md:w-2/3 md:h-auto p-4 md:p-8 pb-32">
+          <div className="relative bg-white w-full h-full md:h-auto p-8 md:rounded-xl md:shadow-xl">
+            <LocalProvider>{children}</LocalProvider>
           </div>
+        </main>
+        <div className="container mx-auto my-10">
+          <Footer />
         </div>
       </body>
     </html>

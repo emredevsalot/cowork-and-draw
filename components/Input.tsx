@@ -9,7 +9,7 @@ export default React.forwardRef<
     <input
       ref={ref}
       type="text"
-      className={`w-full rounded-lg border border-gray-200 placeholder-blue-400 p-2 px-4 ${className}`}
+      className={`w-full rounded-lg border border-gray-200 placeholder-gray-400 p-2 px-4 ${className}`}
       {...props}
     >
       {children}

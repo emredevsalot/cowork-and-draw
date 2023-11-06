@@ -4,7 +4,7 @@ import type { Canvas } from "@/app/types";
 import CanvasUI from "@/components/pixels/CanvasUI";
 import Timer from "@/components/Timer";
 
-export default async function PixelsPage({
+export default async function CanvasPage({
   params,
 }: {
   params: { canvas_id: string };
@@ -31,8 +31,8 @@ export default async function PixelsPage({
 
   return (
     <div className="container mx-auto py-4">
-      <h1 className="text-2xl font-bold mb-4">Pixels - {canvas.title}</h1>
-      <div className="flex w-full flex-grow">
+      <h1 className="text-2xl font-bold mb-4">{canvas.title}</h1>
+      <div className="flex flex-col gap-8 md:flex-row w-full flex-grow">
         <div className="w-full">
           <Timer />
         </div>
