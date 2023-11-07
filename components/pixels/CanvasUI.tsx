@@ -7,6 +7,7 @@ import { useLocalData } from "@/app/providers/LocalProvider";
 import { Canvas, ILocalData } from "@/app/types";
 import Pixel from "./Pixel";
 import Button from "../Button";
+import ConnectionStatus from "../ConnectionStatus";
 
 // This component represents a canvas with pixels to be revealed.
 // It handles the reveal and reset actions.
@@ -90,6 +91,7 @@ function CanvasUI({
 
   return (
     <div className="flex flex-col items-center">
+      <ConnectionStatus socket={socket} />
       {pixels}
       <br />
       <Button
