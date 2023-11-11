@@ -19,13 +19,13 @@ export const ClearRoomButton: React.FC<{ roomId: string }> = ({ roomId }) => {
             className="outline outline-1 outline-red-400 rounded-full px-3 py-1 text-red-400 text-sm hover:bg-red-200 hover:text-red-500 whitespace-nowrap"
             onClick={clearRoom}
           >
-            I'm sure! Clear all messages for everyone!
+            I&apos;m sure! Clear all messages for everyone!
           </button>
           <button
             className="outline outline-1 outline-stone-400 rounded-full px-3 py-1 text-stone-400 text-sm hover:bg-stone-200 hover:text-stone-500 whitespace-nowrap"
             onClick={() => setShowConfirmation(false)}
           >
-            No, don't clear
+            No, don&apos;t clear
           </button>
         </div>
       )}

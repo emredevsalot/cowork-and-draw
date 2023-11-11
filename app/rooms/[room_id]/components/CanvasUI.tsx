@@ -27,7 +27,7 @@ export const CanvasUI: React.FC<{
   const { socket, user } = useContext(
     RoomSocketContext
   ) as RoomSocketContextType;
-  if (!socket) return;
+  // if (!socket) return;
 
   useEffect(() => {
     function onMessageListener(event: MessageEvent<string>) {

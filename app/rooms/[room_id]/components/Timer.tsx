@@ -45,7 +45,7 @@ const Timer = () => {
       const timerInterval = setInterval(updateTimer, 1000);
       return () => clearInterval(timerInterval); // Cleanup on unmount
     }
-  }, [storageValues?.timerStarted]);
+  }, [storageValues?.timerStarted, updateTimer]);
 
   const handleTimerStart = () => {
     const currentTime = new Date().getTime();
