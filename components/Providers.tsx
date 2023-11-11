@@ -1,18 +1,13 @@
 "use client";
 
-import {
-  createContext,
-  useState,
-  ReactNode,
-  useContext,
-  useEffect,
-} from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
-import { LocalContextType } from "../types";
+import { LocalContextType } from "@/app/types";
+import { SessionProvider } from "next-auth/react";
 
 export const LocalContext = createContext<LocalContextType | null>(null);
 
-export const LocalProvider = ({ children }: { children: ReactNode }) => {
+export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [storageValues, setStorageValues] = useState(() => {
     if (typeof window !== "undefined") {
       const localData = window.localStorage.getItem("localData");
@@ -50,11 +45,13 @@ export const LocalProvider = ({ children }: { children: ReactNode }) => {
   }, [storageValues]);
 
   return (
-    <LocalContext.Provider
-      value={{ storageValues, setStorageValues, storageValuesLoaded }}
-    >
-      {children}
-    </LocalContext.Provider>
+    <SessionProvider>
+      <LocalContext.Provider
+        value={{ storageValues, setStorageValues, storageValuesLoaded }}
+      >
+        {children}
+      </LocalContext.Provider>
+    </SessionProvider>
   );
 };
 

@@ -1,27 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import usePartySocket from "partysocket/react";
-import { PARTYKIT_HOST } from "@/app/env";
-import { useLocalData } from "@/app/providers/LocalProvider";
+import { useContext, useEffect, useState } from "react";
+import { useLocalData } from "@/components/Providers";
 import { Canvas, ILocalData } from "@/app/types";
-import Pixel from "./Pixel";
-import Button from "../Button";
-import ConnectionStatus from "../ConnectionStatus";
+import { RoomSocketContext, RoomSocketContextType } from "./RoomSocketProvider";
+import Pixel from "@/components/room/Pixel";
+import ConnectionStatus from "@/components/ConnectionStatus";
+import Button from "@/components/Button";
 
 // This component represents a canvas with pixels to be revealed.
 // It handles the reveal and reset actions.
-function CanvasUI({
-  id,
-  rowCount,
-  columnCount,
-  initialRevealedPixels,
-}: {
-  id: string;
+export const CanvasUI: React.FC<{
   rowCount: number;
   columnCount: number;
   initialRevealedPixels: number;
-}) {
+}> = ({ rowCount, columnCount, initialRevealedPixels }) => {
   const { storageValues, setStorageValues, storageValuesLoaded } =
     useLocalData();
 
@@ -31,16 +24,23 @@ function CanvasUI({
     initialRevealedPixels
   );
 
-  const socket = usePartySocket({
-    host: PARTYKIT_HOST,
-    room: id,
-    onMessage(event) {
+  const { socket, user } = useContext(
+    RoomSocketContext
+  ) as RoomSocketContextType;
+  if (!socket) return;
+
+  useEffect(() => {
+    function onMessageListener(event: MessageEvent<string>) {
       const message = JSON.parse(event.data) as Canvas;
       if (typeof message.revealedPixels === "number") {
         setRevealedPixels(message.revealedPixels);
       }
-    },
-  });
+    }
+    socket.addEventListener("message", onMessageListener);
+    return () => {
+      socket.removeEventListener("message", onMessageListener);
+    };
+  }, [socket]);
 
   const handleRevealPixel = () => {
     if (
@@ -91,7 +91,6 @@ function CanvasUI({
 
   return (
     <div className="flex flex-col items-center">
-      <ConnectionStatus socket={socket} />
       {pixels}
       <br />
       <Button
@@ -106,8 +105,9 @@ function CanvasUI({
           <Button onClick={handleReset}>Reset Canvas</Button>
         </div>
       )}
+      <ConnectionStatus socket={socket} />
     </div>
   );
-}
+};
 
 export default CanvasUI;

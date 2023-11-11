@@ -2,7 +2,8 @@ import Footer from "@/components/Footer";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { LocalProvider } from "./providers/LocalProvider";
+import { Providers } from "@/components/Providers";
+import Header from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,14 +20,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="mx-auto md:my-auto w-screen md:w-2/3 md:h-auto p-4 md:p-8 pb-32">
-          <div className="relative bg-white w-full h-full md:h-auto p-8 md:rounded-xl md:shadow-xl">
-            <LocalProvider>{children}</LocalProvider>
+        <Providers>
+          <Header />
+          <main className="container mx-auto md:h-auto px-4 md:px-10 py-4 md:py-10">
+            {children}
+          </main>
+          <div className="container mx-auto my-10">
+            <Footer />
           </div>
-        </main>
-        <div className="container mx-auto my-10">
-          <Footer />
-        </div>
+        </Providers>
       </body>
     </html>
   );

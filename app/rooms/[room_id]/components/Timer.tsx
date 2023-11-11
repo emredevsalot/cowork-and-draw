@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { format, differenceInMilliseconds } from "date-fns";
-import { useLocalData } from "@/app/providers/LocalProvider";
+import { useLocalData } from "@/components/Providers";
 import { ILocalData } from "@/app/types";
-import Button from "./Button";
+import Button from "@/components/Button";
 
 const Timer = () => {
   const { storageValues, setStorageValues, storageValuesLoaded } =
@@ -89,8 +89,8 @@ const Timer = () => {
   }
 
   return (
-    <div className=" flex flex-col gap-4 items-center">
-      <div>{formatTime(timeLeft)}</div>
+    <div className="flex flex-col gap-4 items-center">
+      <div className="text-8xl">{formatTime(timeLeft)}</div>
       <div className="flex gap-4">
         {storageValues?.timerStarted ? (
           <Button onClick={handleTimerStop}>Stop</Button>
