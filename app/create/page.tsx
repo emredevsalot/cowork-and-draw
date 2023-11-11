@@ -1,11 +1,15 @@
 import { redirect } from "next/navigation";
-import { PARTYKIT_URL } from "./env";
-import type { Canvas } from "./types";
-import CanvasMaker from "@/components/pixels/CanvasMaker";
+
+import { PARTYKIT_URL } from "@/app/env";
+
+import CreateRoom from "./components/CreateRoom";
+import { Canvas } from "../types";
 
 const randomId = () => Math.random().toString(36).substring(2, 10);
 
-export default function Home() {
+export const revalidate = 0;
+
+export default async function CreatePage() {
   async function createCanvas(formData: FormData) {
     "use server";
 
@@ -21,9 +25,10 @@ export default function Home() {
       rowCount,
       columnCount,
       revealedPixels: 0,
+      messages: [],
     };
 
-    await fetch(`${PARTYKIT_URL}/party/${id}`, {
+    await fetch(`${PARTYKIT_URL}/parties/canvasroom/${id}`, {
       method: "POST",
       body: JSON.stringify(canvas),
       headers: {
@@ -31,14 +36,15 @@ export default function Home() {
       },
     });
 
-    redirect(`/${id}`);
+    redirect(`/rooms/${id}`);
   }
+
   return (
-    <div className="container mx-auto py-4">
-      <h1 className="text-2xl font-bold mb-4">Create a room</h1>
+    <div className="w-full flex flex-col gap-6">
+      <h1 className="text-4xl font-medium">Create a room</h1>
       <form action={createCanvas}>
         <div className="flex flex-col space-y-4">
-          <CanvasMaker />
+          <CreateRoom />
         </div>
       </form>
     </div>

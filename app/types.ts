@@ -1,8 +1,11 @@
+import { Message } from "@/party/utils/message";
+
 export type Canvas = {
   title: string;
   rowCount: number;
   columnCount: number;
   revealedPixels: number;
+  messages: Message[];
 };
 
 export interface ILocalData {

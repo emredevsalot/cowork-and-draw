@@ -1,5 +1,9 @@
 {
   "name": "cowork-and-draw",
-  "main": "party/index.ts",
-  "compatibilityDate": "2023-10-26"
+  "main": "party/main.ts",
+  "compatibilityDate": "2023-10-26",
+  "parties": {
+    "canvasroom": "party/canvasRoom.ts",
+    "canvasrooms": "party/canvasRooms.ts"
+  }
 }

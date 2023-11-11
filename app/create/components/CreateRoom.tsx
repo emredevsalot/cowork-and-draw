@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Input from "../Input";
-import Button from "../Button";
 
-export default function CanvasMaker() {
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+
+export default function CreateRoom() {
   const [title, setTitle] = useState("");
   const [rowCount, setRowCount] = useState("3");
   const [columnCount, setColumnCount] = useState("3");

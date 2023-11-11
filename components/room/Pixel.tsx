@@ -13,13 +13,13 @@ type Props = {
 const Pixel = ({ rowId, columnId, columnCount, revealedPixels }: Props) => {
   const uniqueId = rowId * columnCount + columnId;
   const isRevealed = uniqueId < revealedPixels;
-  const [pixelColor, setPixelColor] = useState("bg-gray-300");
+  const [pixelColor, setPixelColor] = useState("bg-white");
 
   useEffect(() => {
     if (isRevealed) {
       setPixelColor("bg-green-500");
     } else {
-      setPixelColor("bg-gray-300");
+      setPixelColor("bg-white");
     }
   }, [isRevealed]);
 
