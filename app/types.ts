@@ -8,12 +8,23 @@ export type Canvas = {
   messages: Message[];
 };
 
+export type TimerId = "focusTimer" | "restTimer" | "longRestTimer";
+
+export type TimerOption = {
+  id: TimerId;
+  name: string;
+  duration: number;
+};
+
 export interface ILocalData {
   availablePixelAmount: number;
-  timerMinutesTotal: number;
   timerStarted: boolean;
   timerStartedAt: number;
   timerMinutesRemaining: number;
+  selectedTimer: TimerId;
+  focusDuration: number;
+  restDuration: number;
+  longRestDuration: number;
 }
 
 export type LocalContextType = {

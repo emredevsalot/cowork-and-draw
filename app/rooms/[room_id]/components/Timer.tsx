@@ -1,80 +1,115 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { format, differenceInMilliseconds } from "date-fns";
 import { useLocalData } from "@/components/Providers";
-import { ILocalData } from "@/app/types";
+import { ILocalData, TimerOption } from "@/app/types";
 import Button from "@/components/Button";
 
-const Timer = () => {
-  const { storageValues, setStorageValues, storageValuesLoaded } =
-    useLocalData();
+const useTimer = ({
+  storageValues,
+  setStorageValues,
+}: {
+  storageValues: ILocalData;
+  setStorageValues: (storageValues: ILocalData) => void;
+}) => {
+  const timerOptions: TimerOption[] = [
+    {
+      id: "focusTimer",
+      name: "Focus",
+      duration: storageValues?.focusDuration,
+    },
+    {
+      id: "restTimer",
+      name: "Rest",
+      duration: storageValues?.restDuration,
+    },
+    {
+      id: "longRestTimer",
+      name: "Long Rest",
+      duration: storageValues?.longRestDuration,
+    },
+  ];
 
-  const [timeLeft, setTimeLeft] = useState(
-    storageValues?.timerMinutesRemaining * 60 * 1000
+  const initialSelectedTimer = timerOptions.find(
+    (option) => option.id === storageValues?.selectedTimer
   );
 
-  const updateTimer = () => {
-    const elapsedTime = differenceInMilliseconds(
-      new Date(),
-      storageValues.timerStartedAt
-    );
-    const remainingTime =
-      storageValues.timerMinutesRemaining * 60 * 1000 - elapsedTime;
-
-    if (remainingTime > 0) {
-      setTimeLeft(remainingTime);
-    } else {
-      setTimeLeft(storageValues.timerMinutesTotal * 60 * 1000);
-
-      const updatedStorageValues: ILocalData = {
-        ...storageValues,
-        timerStarted: false,
-        availablePixelAmount:
-          storageValues.availablePixelAmount == null
-            ? 0
-            : storageValues.availablePixelAmount + 1,
-        timerMinutesRemaining: storageValues.timerMinutesTotal,
-      };
-      setStorageValues(updatedStorageValues);
-    }
-  };
+  const [selectedTimer, setSelectedTimer] = useState<TimerOption>(
+    initialSelectedTimer || timerOptions[0]
+  );
+  const [timeLeft, setTimeLeft] = useState<number>(
+    storageValues?.timerMinutesRemaining * 60 * 1000 ||
+      selectedTimer.duration * 60 * 1000
+  );
 
   // Update the timer every second if it's started
   useEffect(() => {
-    if (storageValues?.timerStarted) {
-      const timerInterval = setInterval(updateTimer, 1000);
-      return () => clearInterval(timerInterval); // Cleanup on unmount
-    }
-  }, [storageValues?.timerStarted, updateTimer]);
+    let animationFrameId: number;
+    const updateTimer = () => {
+      const elapsedTime = differenceInMilliseconds(
+        new Date(),
+        storageValues.timerStartedAt
+      );
+      const remainingTime =
+        storageValues.timerMinutesRemaining * 60 * 1000 - elapsedTime;
 
-  const handleTimerStart = () => {
+      if (remainingTime > 0) {
+        setTimeLeft(remainingTime);
+        animationFrameId = requestAnimationFrame(updateTimer);
+      } else {
+        setTimeLeft(selectedTimer.duration * 60 * 1000);
+
+        const updatedStorageValues: ILocalData = {
+          ...storageValues,
+          timerStarted: false,
+          availablePixelAmount:
+            storageValues.availablePixelAmount == null
+              ? 0
+              : storageValues.selectedTimer === "focusTimer"
+              ? storageValues.availablePixelAmount + 1
+              : storageValues.availablePixelAmount,
+          timerMinutesRemaining: selectedTimer.duration,
+        };
+        setStorageValues(updatedStorageValues);
+      }
+    };
+
+    if (storageValues?.timerStarted) {
+      animationFrameId = requestAnimationFrame(updateTimer);
+      return () => cancelAnimationFrame(animationFrameId); // Cleanup on unmount
+    }
+  }, [storageValues?.timerStarted]);
+
+  const handleTimerStart = useCallback(() => {
     const currentTime = new Date().getTime();
 
     const updatedStorageValues: ILocalData = {
       ...storageValues,
       timerStarted: true,
       timerStartedAt: currentTime,
-      // timerMinutesTotal: 0.16, // FOR TESTING PURPOSES
     };
     setStorageValues(updatedStorageValues);
-  };
+  }, [storageValues, setStorageValues]);
 
-  const handleTimerStop = () => {
+  const handleTimerStop = useCallback(() => {
     const updatedStorageValues: ILocalData = {
       ...storageValues,
       timerStarted: false,
       timerMinutesRemaining: timeLeft / 60000,
     };
     setStorageValues(updatedStorageValues);
-  };
+  }, [storageValues, setStorageValues, timeLeft]);
 
-  const handleTimerReset = () => {
+  const handleTimerReset = (timerOption: TimerOption) => {
+    setSelectedTimer(timerOption);
+
     const updatedStorageValues: ILocalData = {
       ...storageValues,
       timerStarted: false,
-      timerMinutesRemaining: storageValues.timerMinutesTotal,
+      timerMinutesRemaining: timerOption.duration,
+      selectedTimer: timerOption.id,
     };
-    setTimeLeft(storageValues.timerMinutesTotal * 60 * 1000);
+    setTimeLeft(timerOption.duration * 60 * 1000);
     setStorageValues(updatedStorageValues);
   };
 
@@ -84,20 +119,63 @@ const Timer = () => {
     return format(date, "mm:ss");
   };
 
+  return {
+    timerOptions,
+    selectedTimer,
+    timeLeft,
+    handleTimerStart,
+    handleTimerStop,
+    handleTimerReset,
+    formatTime,
+  };
+};
+
+const Timer = () => {
+  const { storageValues, setStorageValues, storageValuesLoaded } =
+    useLocalData();
+
+  const {
+    timerOptions,
+    selectedTimer,
+    timeLeft,
+    handleTimerStart,
+    handleTimerStop,
+    handleTimerReset,
+    formatTime,
+  } = useTimer({ storageValues, setStorageValues });
+
   if (!storageValuesLoaded) {
     return <div className=" flex justify-center">Loading...</div>;
   }
 
   return (
     <div className="flex flex-col gap-4 items-center">
+      {/* Timer options */}
+      <div className="flex gap-4">
+        {timerOptions.map((option) => (
+          <button
+            key={option.id}
+            className={`outline outline-1 outline-stone-400 rounded-full px-3 py-1 text-stone-400 text-sm hover:bg-stone-200 hover:text-stone-500 whitespace-nowrap ${
+              option.name === selectedTimer?.name ? "bg-stone-200" : ""
+            }`}
+            onClick={() => handleTimerReset(option)}
+          >
+            {option.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Timer */}
       <div className="text-8xl">{formatTime(timeLeft)}</div>
+
+      {/* Buttons */}
       <div className="flex gap-4">
         {storageValues?.timerStarted ? (
           <Button onClick={handleTimerStop}>Stop</Button>
         ) : (
           <Button onClick={handleTimerStart}>Start</Button>
         )}
-        <Button onClick={handleTimerReset}>Reset</Button>
+        <Button onClick={() => handleTimerReset(selectedTimer)}>Reset</Button>
       </div>
     </div>
   );

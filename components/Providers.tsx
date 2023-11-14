@@ -2,10 +2,21 @@
 
 import { createContext, useState, useContext, useEffect } from "react";
 
-import { LocalContextType } from "@/app/types";
+import { ILocalData, LocalContextType } from "@/app/types";
 import { SessionProvider } from "next-auth/react";
 
 export const LocalContext = createContext<LocalContextType | null>(null);
+
+const defaultLocalData: ILocalData = {
+  availablePixelAmount: 0,
+  timerStarted: false,
+  timerStartedAt: 0,
+  timerMinutesRemaining: 25,
+  selectedTimer: "focusTimer",
+  focusDuration: 25,
+  restDuration: 5,
+  longRestDuration: 15,
+};
 
 export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [storageValues, setStorageValues] = useState(() => {
@@ -15,14 +26,7 @@ export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
         if (localData && localData !== undefined) {
           return JSON.parse(localData);
         } else {
-          // default localData
-          return {
-            availablePixelAmount: 0,
-            timerMinutesTotal: 25.015,
-            timerStarted: false,
-            timerStartedAt: 0,
-            timerMinutesRemaining: 25.015,
-          };
+          return defaultLocalData;
         }
       } catch (err: any) {
         console.log("Error: ", err.message);
