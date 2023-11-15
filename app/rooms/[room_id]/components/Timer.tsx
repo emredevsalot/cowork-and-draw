@@ -42,6 +42,82 @@ const useTimer = ({
       selectedTimer.duration * 60 * 1000
   );
 
+  // Function to handle transition between timers
+  const handleTimerTransition = () => {
+    const currentTime = new Date().getTime();
+    const updatedStorageValues: ILocalData = { ...storageValues };
+    let nextTimer: TimerOption;
+
+    if (selectedTimer.id === "focusTimer") {
+      const focusSessions = updatedStorageValues.focusSessions || 0;
+      const updatedFocusSessions = focusSessions + 1;
+
+      if (updatedFocusSessions % updatedStorageValues.longRestInterval === 0) {
+        nextTimer = handleTransitionToLongRest(
+          updatedStorageValues,
+          currentTime
+        );
+      } else {
+        nextTimer = handleTransitionToRest(
+          updatedStorageValues,
+          updatedFocusSessions,
+          currentTime
+        );
+      }
+    } else {
+      nextTimer = handleTransitionToFocus(updatedStorageValues, currentTime);
+    }
+
+    setTimeLeft(nextTimer.duration * 60 * 1000);
+    setSelectedTimer(nextTimer);
+    setStorageValues(updatedStorageValues);
+  };
+
+  const handleTransitionToLongRest = (
+    updatedStorageValues: ILocalData,
+    currentTime: number
+  ) => {
+    const nextTimer = timerOptions.find(
+      (option) => option.id === "longRestTimer"
+    )!;
+    updatedStorageValues.selectedTimer = nextTimer.id;
+    updatedStorageValues.timerMinutesRemaining = nextTimer.duration;
+    updatedStorageValues.availablePixelAmount++;
+    updatedStorageValues.timerStartedAt = currentTime;
+    updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
+    updatedStorageValues.focusSessions = 0; // Reset focus sessions after long rest
+    return nextTimer;
+  };
+
+  const handleTransitionToRest = (
+    updatedStorageValues: ILocalData,
+    updatedFocusSessions: number,
+    currentTime: number
+  ) => {
+    const nextTimer = timerOptions.find((option) => option.id === "restTimer")!;
+    updatedStorageValues.selectedTimer = nextTimer.id;
+    updatedStorageValues.timerMinutesRemaining = nextTimer.duration;
+    updatedStorageValues.availablePixelAmount++;
+    updatedStorageValues.timerStartedAt = currentTime;
+    updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
+    updatedStorageValues.focusSessions = updatedFocusSessions;
+    return nextTimer;
+  };
+
+  const handleTransitionToFocus = (
+    updatedStorageValues: ILocalData,
+    currentTime: number
+  ) => {
+    const nextTimer = timerOptions.find(
+      (option) => option.id === "focusTimer"
+    )!;
+    updatedStorageValues.selectedTimer = nextTimer.id;
+    updatedStorageValues.timerMinutesRemaining = nextTimer.duration;
+    updatedStorageValues.timerStartedAt = currentTime;
+    updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
+    return nextTimer;
+  };
+
   // Update the timer every second if it's started
   useEffect(() => {
     let animationFrameId: number;
@@ -57,20 +133,7 @@ const useTimer = ({
         setTimeLeft(remainingTime);
         animationFrameId = requestAnimationFrame(updateTimer);
       } else {
-        setTimeLeft(selectedTimer.duration * 60 * 1000);
-
-        const updatedStorageValues: ILocalData = {
-          ...storageValues,
-          timerStarted: false,
-          availablePixelAmount:
-            storageValues.availablePixelAmount == null
-              ? 0
-              : storageValues.selectedTimer === "focusTimer"
-              ? storageValues.availablePixelAmount + 1
-              : storageValues.availablePixelAmount,
-          timerMinutesRemaining: selectedTimer.duration,
-        };
-        setStorageValues(updatedStorageValues);
+        handleTimerTransition();
       }
     };
 
@@ -78,7 +141,7 @@ const useTimer = ({
       animationFrameId = requestAnimationFrame(updateTimer);
       return () => cancelAnimationFrame(animationFrameId); // Cleanup on unmount
     }
-  }, [storageValues?.timerStarted]);
+  }, [storageValues?.timerStarted, storageValues?.selectedTimer]);
 
   const handleTimerStart = useCallback(() => {
     const currentTime = new Date().getTime();

@@ -25,6 +25,9 @@ export interface ILocalData {
   focusDuration: number;
   restDuration: number;
   longRestDuration: number;
+  focusSessions: number;
+  autoStartNext: boolean;
+  longRestInterval: number;
 }
 
 export type LocalContextType = {
