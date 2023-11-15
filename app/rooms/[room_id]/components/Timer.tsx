@@ -121,7 +121,6 @@ const useTimer = ({
 
   // Update the timer every second if it's started
   useEffect(() => {
-    let animationFrameId: number;
     const updateTimer = () => {
       const elapsedTime = differenceInMilliseconds(
         new Date(),
@@ -132,15 +131,14 @@ const useTimer = ({
 
       if (remainingTime > 0) {
         setTimeLeft(remainingTime);
-        animationFrameId = requestAnimationFrame(updateTimer);
       } else {
         handleTimerTransition();
       }
     };
 
     if (storageValues?.timerStarted) {
-      animationFrameId = requestAnimationFrame(updateTimer);
-      return () => cancelAnimationFrame(animationFrameId); // Cleanup on unmount
+      const timerInterval = setInterval(updateTimer, 1000);
+      return () => clearInterval(timerInterval); // Cleanup on unmount
     }
   }, [storageValues?.timerStarted, storageValues?.selectedTimer]);
 
