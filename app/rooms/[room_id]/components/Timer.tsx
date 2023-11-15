@@ -68,6 +68,7 @@ const useTimer = ({
       nextTimer = handleTransitionToFocus(updatedStorageValues, currentTime);
     }
 
+    playSound();
     setTimeLeft(nextTimer.duration * 60 * 1000);
     setSelectedTimer(nextTimer);
     setStorageValues(updatedStorageValues);
@@ -180,6 +181,12 @@ const useTimer = ({
     const date = new Date(0);
     date.setMilliseconds(timeLeft);
     return format(date, "mm:ss");
+  };
+
+  const playSound = () => {
+    const audio = new Audio("/sounds/timer-end.mp3");
+    audio.volume = 0.2;
+    audio.play();
   };
 
   return {
