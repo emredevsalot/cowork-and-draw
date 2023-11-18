@@ -4,6 +4,7 @@ import { format, differenceInMilliseconds } from "date-fns";
 import { useLocalData } from "@/components/Providers";
 import { ILocalData, TimerOption } from "@/app/types";
 import Button from "@/components/Button";
+import SettingsModal from "./SettingsModal";
 
 const useTimer = ({
   storageValues,
@@ -83,7 +84,10 @@ const useTimer = ({
     )!;
     updatedStorageValues.selectedTimer = nextTimer.id;
     updatedStorageValues.timerMinutesRemaining = nextTimer.duration;
-    updatedStorageValues.availablePixelAmount++;
+    updatedStorageValues.availablePixelAmount =
+      updatedStorageValues.focusDuration === 50
+        ? updatedStorageValues.availablePixelAmount + 2
+        : updatedStorageValues.availablePixelAmount + 1;
     updatedStorageValues.timerStartedAt = currentTime;
     updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
     updatedStorageValues.focusSessions = 0; // Reset focus sessions after long rest
@@ -98,7 +102,10 @@ const useTimer = ({
     const nextTimer = timerOptions.find((option) => option.id === "restTimer")!;
     updatedStorageValues.selectedTimer = nextTimer.id;
     updatedStorageValues.timerMinutesRemaining = nextTimer.duration;
-    updatedStorageValues.availablePixelAmount++;
+    updatedStorageValues.availablePixelAmount =
+      updatedStorageValues.focusDuration === 50
+        ? updatedStorageValues.availablePixelAmount + 2
+        : updatedStorageValues.availablePixelAmount + 1;
     updatedStorageValues.timerStartedAt = currentTime;
     updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
     updatedStorageValues.focusSessions = updatedFocusSessions;
@@ -141,6 +148,18 @@ const useTimer = ({
       return () => clearInterval(timerInterval); // Cleanup on unmount
     }
   }, [storageValues?.timerStarted, storageValues?.selectedTimer]);
+
+  // On settings change, switch to "focusTimer" and reset time
+  useEffect(() => {
+    setSelectedTimer(timerOptions[0]);
+    setTimeLeft(storageValues?.timerMinutesRemaining * 60 * 1000);
+  }, [
+    storageValues?.focusDuration,
+    storageValues?.restDuration,
+    storageValues?.longRestDuration,
+    storageValues?.longRestInterval,
+    storageValues?.autoStartNext,
+  ]);
 
   const handleTimerStart = useCallback(() => {
     const currentTime = new Date().getTime();
@@ -220,7 +239,7 @@ const useTimer = ({
   };
 };
 
-const Timer = () => {
+const Timer = ({ roomId }: { roomId: string }) => {
   const { storageValues, setStorageValues, storageValuesLoaded } =
     useLocalData();
 
@@ -240,6 +259,8 @@ const Timer = () => {
 
   return (
     <div className="flex flex-col gap-4 items-center">
+      <SettingsModal roomId={roomId} />
+
       {/* Timer options */}
       <div className="flex gap-4">
         {timerOptions.map((option) => (
@@ -254,10 +275,8 @@ const Timer = () => {
           </button>
         ))}
       </div>
-
       {/* Timer */}
       <div className="text-8xl">{formatTime(timeLeft)}</div>
-
       {/* Buttons */}
       <div className="flex gap-4">
         {storageValues?.timerStarted ? (
@@ -265,7 +284,15 @@ const Timer = () => {
         ) : (
           <Button onClick={handleTimerStart}>Start</Button>
         )}
-        <Button onClick={() => handleTimerReset(selectedTimer)}>Reset</Button>
+        <Button
+          onClick={() =>
+            handleTimerReset(
+              timerOptions.find((option) => option.id === selectedTimer.id)!
+            )
+          }
+        >
+          Reset
+        </Button>
       </div>
     </div>
   );
