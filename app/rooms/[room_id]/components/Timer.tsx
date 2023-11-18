@@ -182,9 +182,31 @@ const useTimer = ({
   };
 
   const playSound = () => {
-    const audio = new Audio("/sounds/timer-end.mp3");
-    audio.volume = 0.2;
-    audio.play();
+    const audioContext = new AudioContext();
+    const request = new Request("/sounds/timer-end.mp3");
+    fetch(request)
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => audioContext.decodeAudioData(buffer))
+      .then((decodedData) => {
+        const source = audioContext.createBufferSource();
+        source.buffer = decodedData;
+
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = 0.2;
+
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        source.onended = () => {
+          audioContext.close();
+        };
+
+        source.start();
+      })
+      .catch((err) => {
+        console.error("Error fetching or decoding audio:", err);
+        audioContext.close();
+      });
   };
 
   return {
