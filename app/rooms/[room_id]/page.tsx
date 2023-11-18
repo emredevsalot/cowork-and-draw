@@ -10,6 +10,7 @@ import CanvasUI from "./components/CanvasUI";
 import ChatUI from "./components/ChatUI";
 import RoomSocketProvider from "./components/RoomSocketProvider";
 import ClearRoomButton from "./components/ClearRoomButton";
+import Button from "@/components/Button";
 
 const party = "canvasroom";
 
@@ -28,11 +29,16 @@ export default async function RoomPage({
 
   return (
     <div className="container mx-auto py-4">
-      <div className="flex flex-wrap justify-start items-center gap-4 mb-4">
-        <Link href="/rooms" className="text-stone-400 whitespace-nowrap">
-          &lt;- All Rooms
+      <div className="flex flex-wrap w-full justify-between items-center gap-4 mb-4">
+        <div className="flex gap-4">
+          <Link href="/rooms" className="text-stone-400 whitespace-nowrap">
+            &lt;- All Rooms
+          </Link>
+          <ClearRoomButton roomId={params.room_id} />
+        </div>
+        <Link href={`/rooms/${params.room_id}?showSettings=y`}>
+          <Button>Settings</Button>
         </Link>
-        <ClearRoomButton roomId={params.room_id} />
       </div>
       {canvas ? (
         <>
@@ -45,7 +51,7 @@ export default async function RoomPage({
             <h1 className="text-2xl font-bold">{canvas.title}</h1>
             <div className="flex flex-col gap-8 py-12 md:flex-row w-full flex-grow">
               <div className="flex flex-col gap-4 py-8 md:py-20 bg-white w-full items-center justify-center md:rounded-xl md:shadow-md">
-                <Timer />
+                <Timer roomId={params.room_id} />
                 <PresenceBar roomId={params.room_id} />
               </div>
               <div className="w-full flex justify-center items-center">
