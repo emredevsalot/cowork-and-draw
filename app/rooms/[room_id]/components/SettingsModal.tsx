@@ -150,23 +150,23 @@ const SettingsModal = ({ roomId }: Props) => {
           </div>
           <div className=" flex flex-col gap-4 px-5 pb-6">
             <div>
-              <label htmlFor="focusDuration">
-                (Reveal 1 pixel for 25 minutes, 2 pixels for 50 minutes.) <br />{" "}
-                <br />
-                Focus Duration
-              </label>
-              <select
+              <label htmlFor="focusDuration">Focus Duration (m)</label>
+              <Input
+                placeholder="Focus Duration"
+                type="number"
                 id="focusDuration"
-                className="w-full rounded-lg border border-gray-200 placeholder-gray-400 p-2 "
                 value={focusDuration}
                 onChange={(e) => setFocusDuration(Number(e.target.value))}
-              >
-                <option value="25">25 minutes</option>
-                <option value="50">50 minutes</option>
-              </select>
+              />
+              <label>
+                (Earn 1 pixel for each 25 minutes of pomodoro)
+                <br />
+                (Current: {Math.floor(focusDuration / 25)} pixel
+                {Math.floor(focusDuration / 25) !== 1 && "s"} per pomodoro)
+              </label>
             </div>
             <div>
-              <label htmlFor="restDuration">Rest Duration</label>
+              <label htmlFor="restDuration">Rest Duration (m)</label>
               <Input
                 placeholder="Rest Duration"
                 type="number"
@@ -176,7 +176,7 @@ const SettingsModal = ({ roomId }: Props) => {
               />
             </div>
             <div>
-              <label htmlFor="longRestDuration">Long Rest Duration</label>
+              <label htmlFor="longRestDuration">Long Rest Duration (m)</label>
               <Input
                 placeholder="Long Rest Duration"
                 type="number"

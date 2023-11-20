@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { format, differenceInMilliseconds } from "date-fns";
+import { differenceInMilliseconds } from "date-fns";
 import { useLocalData } from "@/components/Providers";
 import { ILocalData, TimerOption } from "@/app/types";
 import Button from "@/components/Button";
@@ -84,10 +84,9 @@ const useTimer = ({
     )!;
     updatedStorageValues.selectedTimer = nextTimer.id;
     updatedStorageValues.timerMinutesRemaining = nextTimer.duration;
-    updatedStorageValues.availablePixelAmount =
-      updatedStorageValues.focusDuration === 50
-        ? updatedStorageValues.availablePixelAmount + 2
-        : updatedStorageValues.availablePixelAmount + 1;
+    updatedStorageValues.availablePixelAmount += Math.floor(
+      updatedStorageValues.focusDuration / 25
+    );
     updatedStorageValues.timerStartedAt = currentTime;
     updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
     updatedStorageValues.focusSessions = 0; // Reset focus sessions after long rest
@@ -102,10 +101,9 @@ const useTimer = ({
     const nextTimer = timerOptions.find((option) => option.id === "restTimer")!;
     updatedStorageValues.selectedTimer = nextTimer.id;
     updatedStorageValues.timerMinutesRemaining = nextTimer.duration;
-    updatedStorageValues.availablePixelAmount =
-      updatedStorageValues.focusDuration === 50
-        ? updatedStorageValues.availablePixelAmount + 2
-        : updatedStorageValues.availablePixelAmount + 1;
+    updatedStorageValues.availablePixelAmount += Math.floor(
+      updatedStorageValues.focusDuration / 25
+    );
     updatedStorageValues.timerStartedAt = currentTime;
     updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
     updatedStorageValues.focusSessions = updatedFocusSessions;
@@ -195,9 +193,18 @@ const useTimer = ({
   };
 
   const formatTime = (timeLeft: number) => {
-    const date = new Date(0);
-    date.setMilliseconds(timeLeft);
-    return format(date, "mm:ss");
+    // TODO: "date-fns" was not working as expected with 60+ minutes (adding 2 hours)
+    // due to Time Zones, there may be a better way than the current way below
+    const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+    const seconds = Math.floor((timeLeft / 1000) % 60);
+
+    const formattedHours =
+      hours > 0 ? `${hours.toString().padStart(2, "0")}:` : "";
+    const formattedMinutes = minutes.toString().padStart(2, "0");
+    const formattedSeconds = seconds.toString().padStart(2, "0");
+
+    return `${formattedHours}${formattedMinutes}:${formattedSeconds}`;
   };
 
   const playSound = () => {
