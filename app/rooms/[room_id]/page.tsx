@@ -58,6 +58,8 @@ export default async function RoomPage({
                 <CanvasUI
                   rowCount={canvas.rowCount}
                   columnCount={canvas.columnCount}
+                  canvasType={canvas.canvasType}
+                  initialPixelsInfo={canvas.pixelsInfo}
                   initialRevealedPixels={canvas.revealedPixels}
                 />
               </div>
