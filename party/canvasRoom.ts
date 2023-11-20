@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { User, getNextAuthSession, isSessionValid } from "./utils/auth";
 import { SINGLETON_ROOM_ID } from "./canvasRooms";
 import { error, json, notFound, ok } from "./utils/response";
-import { Canvas } from "@/app/types";
+import { Canvas, PixelInfo } from "@/app/types";
 import {
   ClearRoomMessage,
   Message,
@@ -181,9 +181,18 @@ export default class CanvasRoomServer implements Party.Server {
 
     if (message.type === "reveal") {
       this.canvas.revealedPixels += 1;
+
+      const payload = <PixelInfo>{
+        i: message.i,
+        j: message.j,
+        color: message.color,
+      };
+
+      this.canvas.pixelsInfo.push(payload);
       this.party.broadcast(JSON.stringify(this.canvas));
     } else if (message.type === "reset") {
       this.canvas.revealedPixels = 0;
+      this.canvas.pixelsInfo = [];
       this.party.broadcast(JSON.stringify(this.canvas));
     } else if (message.type === "new" || message.type === "edit") {
       const user = connection.state?.user;

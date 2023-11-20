@@ -1,9 +1,15 @@
 import { Message } from "@/party/utils/message";
 
+export type CanvasType = "customCanvas" | "greenCanvas";
+
+export type PixelInfo = { i: number; j: number; color: string };
+
 export type Canvas = {
   title: string;
   rowCount: number;
   columnCount: number;
+  canvasType: CanvasType;
+  pixelsInfo: PixelInfo[];
   revealedPixels: number;
   messages: Message[];
 };

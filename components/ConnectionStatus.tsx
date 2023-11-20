@@ -48,7 +48,7 @@ export default function ConnectionStatus(props: {
   }, [socket]);
 
   return (
-    <div className="z-20 fixed top-0 sm:top-4 left-0 w-full flex justify-center">
+    <div className="z-20 fixed top-0 left-0 w-full flex justify-center">
       <div className="flex gap-2 justify-center items-center bg-stone-50 rounded-full shadow-md border border-stone-300 px-3 py-1 sm:py-2">
         <p className="text-xs font-base uppercase tracking-wider leading-none text-stone-500">
           {display.text}

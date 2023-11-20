@@ -14,11 +14,13 @@
     "next-auth": "^4.24.3",
     "partysocket": "^0.0.14",
     "react": "^18",
+    "react-color": "^2.19.3",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-color": "^3.0.10",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
     "eslint": "^8",

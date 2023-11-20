@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { PARTYKIT_URL } from "@/app/env";
 
 import CreateRoom from "./components/CreateRoom";
-import { Canvas } from "../types";
+import { Canvas, CanvasType } from "../types";
 
 const randomId = () => Math.random().toString(36).substring(2, 10);
 
@@ -19,11 +19,16 @@ export default async function CreatePage() {
       formData.get("columnCount")?.toString() || "3"
     );
 
+    const canvasTypeFromForm = formData.get("canvasType") as CanvasType | null;
+    const canvasType: CanvasType = canvasTypeFromForm || "customCanvas";
+
     const id = randomId();
     const canvas: Canvas = {
       title,
       rowCount,
       columnCount,
+      canvasType,
+      pixelsInfo: [],
       revealedPixels: 0,
       messages: [],
     };
