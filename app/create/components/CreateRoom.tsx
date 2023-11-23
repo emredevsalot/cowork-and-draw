@@ -1,18 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import slugify from "slugify";
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 
 export default function CreateRoom() {
   const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
   const [rowCount, setRowCount] = useState("3");
   const [columnCount, setColumnCount] = useState("3");
   const [canvasType, setCanvasType] = useState("customCanvas");
 
   const canSubmit =
-    title.length > 0 && rowCount.length > 0 && columnCount.length > 0;
+    title.length > 0 &&
+    slug.length > 0 &&
+    rowCount.length > 0 &&
+    columnCount.length > 0;
+
+  // Generating room slug
+  // according to title, row and column counts
+  useEffect(() => {
+    const titleSlug = slugify(title, {
+      lower: true,
+      strict: true,
+    });
+    setSlug(`${titleSlug}-${rowCount}x${columnCount}`);
+  }, [title, rowCount, columnCount]);
 
   return (
     <>
@@ -22,6 +38,15 @@ export default function CreateRoom() {
         name="title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+      />
+      <label htmlFor="slug">Slug</label>
+      <Input
+        placeholder="slug"
+        type="text"
+        name="slug"
+        id="slug"
+        value={slug}
+        onChange={(e) => setSlug(e.target.value)}
       />
       <label htmlFor="rowCount">Row Count</label>
       <Input

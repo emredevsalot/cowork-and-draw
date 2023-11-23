@@ -6,12 +6,15 @@ export type PixelInfo = { i: number; j: number; color: string };
 
 export type Canvas = {
   title: string;
+  slug: string;
+  roomNumber: number;
   rowCount: number;
   columnCount: number;
   canvasType: CanvasType;
   pixelsInfo: PixelInfo[];
   revealedPixels: number;
   messages: Message[];
+  isCompleted: Boolean;
 };
 
 export type TimerId = "focusTimer" | "restTimer" | "longRestTimer";

@@ -17,12 +17,14 @@ export const CanvasUI: React.FC<{
   canvasType: CanvasType;
   initialPixelsInfo: PixelInfo[];
   initialRevealedPixels: number;
+  createNextCanvas: () => Promise<void>;
 }> = ({
   rowCount,
   columnCount,
   canvasType,
   initialPixelsInfo,
   initialRevealedPixels,
+  createNextCanvas,
 }) => {
   const { storageValues, setStorageValues, storageValuesLoaded } =
     useLocalData();
@@ -70,11 +72,13 @@ export const CanvasUI: React.FC<{
     }
   };
 
+  // Tabula rasa function - cleaning the canvas
   const handleReset = () => {
     socket.send(JSON.stringify({ type: "reset" }));
   };
 
-  const isAllRevealed = revealedPixels === totalPixels;
+  // We use ">=" just to be safe, if somehow "revealedPixels" increase by 2 at the last increase.
+  const isAllRevealed = revealedPixels >= totalPixels;
 
   // Function to find the specific pixel color based on i and j values
   // If it's not added yet, return "#ffffff"
@@ -153,8 +157,9 @@ export const CanvasUI: React.FC<{
           </Button>
           {isAllRevealed && (
             <div className="flex flex-col items-center mt-4 gap-4">
-              <div>Done.</div>
-              <Button onClick={handleReset}>Reset Canvas</Button>
+              <form action={createNextCanvas}>
+                <Button type="submit">Next Canvas</Button>
+              </form>
             </div>
           )}
           <ConnectionStatus socket={socket} />
@@ -172,8 +177,9 @@ export const CanvasUI: React.FC<{
           />
           {isAllRevealed && (
             <div className="flex flex-col items-center mt-4 gap-4">
-              <div>Done.</div>
-              <Button onClick={handleReset}>Reset Canvas</Button>
+              <form action={createNextCanvas}>
+                <Button type="submit">Next Canvas</Button>
+              </form>
             </div>
           )}
           <ConnectionStatus socket={socket} />

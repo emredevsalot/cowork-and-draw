@@ -12,8 +12,10 @@ export const SINGLETON_ROOM_ID = "list";
 export type RoomInfoUpdateRequest = {
   id: string;
   title: string;
+  roomNumber: number;
+  isCompleted: Boolean;
   connections: number;
-  action: "enter" | "leave";
+  action: "enter" | "leave" | "completed";
   user?: User;
 };
 
@@ -27,6 +29,8 @@ export type RoomDeleteRequest = {
 export type RoomInfo = {
   id: string;
   title: string;
+  roomNumber: number;
+  isCompleted: Boolean;
   connections: number;
   users: {
     username: string;
@@ -98,6 +102,8 @@ export default class CanvasRoomsServer implements Party.Server {
     const info = persistedInfo ?? {
       id: update.id,
       title: update.title,
+      roomNumber: update.roomNumber,
+      isCompleted: update.isCompleted,
       connections: 0,
       users: [],
     };
@@ -121,6 +127,12 @@ export default class CanvasRoomsServer implements Party.Server {
             ? { ...u, present: false, leftAt: new Date().toISOString() }
             : u
         );
+      }
+    }
+    const completed = update.isCompleted;
+    if (completed) {
+      if (update.action === "completed") {
+        info.isCompleted = true;
       }
     }
 

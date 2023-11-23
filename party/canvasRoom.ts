@@ -61,8 +61,22 @@ export default class CanvasRoomServer implements Party.Server {
       body: JSON.stringify({
         id: this.party.id,
         title: this.canvas?.title,
+        roomNumber: this.canvas?.roomNumber,
+        isCompleted: this.canvas?.isCompleted,
         connections: [...this.party.getConnections()].length,
         user: connection.state?.user,
+        action,
+      }),
+    });
+  }
+
+  /** Send room completion to the room listing party */
+  async updateCompletion(action: "completed") {
+    return this.party.context.parties.canvasrooms.get(SINGLETON_ROOM_ID).fetch({
+      method: "POST",
+      body: JSON.stringify({
+        id: this.party.id,
+        isCompleted: this.canvas?.isCompleted,
         action,
       }),
     });
@@ -188,6 +202,15 @@ export default class CanvasRoomServer implements Party.Server {
         color: message.color,
       };
 
+      // If placed pixel was the last pixel, mark canvas as completed
+      if (
+        this.canvas.revealedPixels >=
+        this.canvas.rowCount * this.canvas.columnCount
+      ) {
+        this.canvas.isCompleted = true;
+        this.updateCompletion("completed");
+      }
+
       this.canvas.pixelsInfo.push(payload);
       this.party.broadcast(JSON.stringify(this.canvas));
     } else if (message.type === "reset") {
@@ -236,9 +259,10 @@ export default class CanvasRoomServer implements Party.Server {
   }
 
   async onClose(connection: Party.Connection) {
-    // TODO: Use to delete rooms on connection close
-    // this.removeRoomFromRoomList(this.party.id);
     this.updateRoomList("leave", connection);
+    // TODO: Use to delete rooms on connection close
+    // await this.removeRoomFromRoomList(this.party.id);
+    // await this.party.storage.deleteAll();
   }
 
   async onStart() {

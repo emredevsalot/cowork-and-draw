@@ -25,10 +25,21 @@ export const RoomList: React.FC<{ initialRooms: RoomInfo[] }> = ({
     },
   });
 
+  const completedRooms = rooms.filter((room) => room.isCompleted);
+  const ongoingRooms = rooms.filter((room) => !room.isCompleted);
+
   return (
     <>
+      <h2 className="text-2xl">Ongoing Rooms</h2>
       <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {rooms.map((room) => (
+        {ongoingRooms.map((room) => (
+          <RoomCard key={room.id} room={room} />
+        ))}
+      </ul>
+
+      <h2 className="text-2xl">Completed Rooms</h2>
+      <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {completedRooms.map((room) => (
           <RoomCard key={room.id} room={room} />
         ))}
       </ul>
