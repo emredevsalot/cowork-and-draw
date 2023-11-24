@@ -1,11 +1,26 @@
-# PartyPoll tutorial
+# Cowork and draw
 
-This is a starter kit for the tutorial on [adding PartyKit to a Next.js app](https://docs.partykit.io/tutorials/add-partykit-to-a-nextjs-app/).
+![hero-image](https://github.com/emredevsalot/cowork-and-draw/assets/72770244/7af0fc42-3659-493c-ade3-10dbb2b67cfa)
 
-What now? You can:
+🚀 Let's reimagine the traditional Pomodoro technique by infusing it with **collaboration** and **creativity**.
 
-- follow [step-by-step tutorial on PartyKit Docs](https://docs.partykit.io/tutorials/add-partykit-to-a-nextjs-app/),
-- explore the code of [the finished app](https://github.com/partykit/partypoll),
-- play with the [live Next.js app on Vercel](https://partypoll.vercel.app/),
-- watch Sylwia Vargas' talk connected to this tutorial from the [2023 Next.js Conf](),
-- join us on our [Discord server](https://discord.gg/KDZb7J4uxJ) or [Twitter](https://twitter.com/partykit_io) 🥰
+## How does it work?
+
+1) **Join** 🤝
+   Join or create a room with friends, colleagues, or other enthusiasts.
+
+2) **Pomodoro** 🍅
+   Choose your time settings and focus on work, reading, or studying for the session.
+
+3) **Draw** 🎨
+   After you complete a pomodoro session, draw pixels on the collaborative canvas.
+
+4) **Chat** 💬
+   Enjoy your breaks while chatting with everyone in the room.
+
+
+## Technologies Used
+
+- [PartyKit](https://www.partykit.io/)
+- [Next.js](https://nextjs.org/)
+- [Vercel](https://vercel.com/)
