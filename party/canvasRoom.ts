@@ -151,16 +151,10 @@ export default class CanvasRoomServer implements Party.Server {
       return notFound();
     }
 
-    // clear room history
+    // admin api for clearing the room (not used in UI)
     if (request.method === "DELETE") {
-      await this.removeRoomMessages();
-      this.party.broadcast(JSON.stringify(<ClearRoomMessage>{ type: "clear" }));
-      this.party.broadcast(
-        newMessage({
-          from: { id: "system" },
-          text: `Room history cleared`,
-        })
-      );
+      await this.removeRoomFromRoomList(this.party.id);
+      await this.party.storage.deleteAll();
       return ok();
     }
 
@@ -260,9 +254,6 @@ export default class CanvasRoomServer implements Party.Server {
 
   async onClose(connection: Party.Connection) {
     this.updateRoomList("leave", connection);
-    // TODO: Use to delete rooms on connection close
-    // await this.removeRoomFromRoomList(this.party.id);
-    // await this.party.storage.deleteAll();
   }
 
   async onStart() {

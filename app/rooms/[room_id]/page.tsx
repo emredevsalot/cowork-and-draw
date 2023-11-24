@@ -70,7 +70,8 @@ export default async function RoomPage({
           <Link href="/rooms" className="text-stone-400 whitespace-nowrap">
             &lt;- All Rooms
           </Link>
-          <ClearRoomButton roomId={params.room_id} />
+          {/* TODO: This has "delete room" functionality now, if we want to use it with auth. later. */}
+          {/* <ClearRoomButton roomId={params.room_id} /> */}
         </div>
         <Link href={`/rooms/${params.room_id}?showSettings=y`}>
           <Button>Settings</Button>
