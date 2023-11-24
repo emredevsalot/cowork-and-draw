@@ -39,14 +39,20 @@ export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <div className="flex flex-col md:flex-row text-center items-center py-12 md:pb-32">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row text-center items-center py-12 md:pb-32">
         <div className="w-full my-8 md:w-2/3">
-          <h1 className="text-4xl md:text-8xl font-bold mb-4">Cowork & Draw</h1>
-          <p className="text-lg md:text-xl mb-8">
-            Collaborative pomodoro app to complete pomodoro sessions together,
+          <h1 className="text-4xl md:text-7xl font-bold mb-4">Cowork & Draw</h1>
+          <div className="text-lg md:text-xl mb-8">
+            <p className="font-bold">(Collaborative pomodoro app)</p>
             <br />
-            create pixel art together, and chat during breaks.
-          </p>
+            <p>
+              •complete pomodoro sessions together
+              <br />
+              •create pixel art together
+              <br />
+              •chat during breaks
+            </p>
+          </div>
           <div className="flex w-full gap-8 justify-center">
             <Link href="/rooms">
               <Button>Rooms -&gt;</Button>
@@ -63,7 +69,7 @@ export default function Home() {
 
       {/* How It Works Section */}
       <section className="py-12 px-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 md:mb-16 text-center">
             How does it work?
           </h2>
