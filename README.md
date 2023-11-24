@@ -18,6 +18,9 @@
 4) **Chat** 💬
    Enjoy your breaks while chatting with everyone in the room.
 
+## Roadmap
+
+You can see the project's to-do list [here](https://github.com/users/emredevsalot/projects/4). I'm always open to all kinds of feedback/contribution and I appreciate it a lot.
 
 ## Technologies Used
 
