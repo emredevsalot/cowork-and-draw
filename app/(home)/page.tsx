@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <div className="flex flex-col md:flex-row text-center items-center pb-8 md:pb-32">
+      <div className="flex flex-col md:flex-row text-center items-center py-12 md:pb-32">
         <div className="w-full my-8 md:w-2/3">
           <h1 className="text-4xl md:text-8xl font-bold mb-4">Cowork & Draw</h1>
           <p className="text-lg md:text-xl mb-8">
