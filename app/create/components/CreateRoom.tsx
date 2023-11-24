@@ -10,8 +10,8 @@ import Input from "@/components/Input";
 export default function CreateRoom() {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [rowCount, setRowCount] = useState("3");
-  const [columnCount, setColumnCount] = useState("3");
+  const [rowCount, setRowCount] = useState("8");
+  const [columnCount, setColumnCount] = useState("8");
   const [canvasType, setCanvasType] = useState("customCanvas");
 
   const canSubmit =

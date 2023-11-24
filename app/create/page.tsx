@@ -13,9 +13,9 @@ export default async function CreatePage() {
 
     const title = formData.get("title")?.toString() || "Anonymous Canvas";
     const slug = formData.get("slug")?.toString() || "slug";
-    const rowCount = parseInt(formData.get("rowCount")?.toString() || "3");
+    const rowCount = parseInt(formData.get("rowCount")?.toString() || "8");
     const columnCount = parseInt(
-      formData.get("columnCount")?.toString() || "3"
+      formData.get("columnCount")?.toString() || "8"
     );
 
     const canvasTypeFromForm = formData.get("canvasType") as CanvasType | null;
