@@ -10,8 +10,8 @@ import Input from "@/components/Input";
 export default function CreateRoom() {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [rowCount, setRowCount] = useState("8");
-  const [columnCount, setColumnCount] = useState("8");
+  const [rowCount, setRowCount] = useState("3");
+  const [columnCount, setColumnCount] = useState("3");
   const [canvasType, setCanvasType] = useState("customCanvas");
 
   const canSubmit =
@@ -49,23 +49,31 @@ export default function CreateRoom() {
         onChange={(e) => setSlug(e.target.value)}
       />
       <label htmlFor="rowCount">Row Count</label>
-      <Input
-        placeholder="Row count"
-        type="number"
+      <select
+        className="w-full rounded-lg border border-gray-200 placeholder-gray-400 p-2"
         id="rowCount"
         name="rowCount"
         value={rowCount}
         onChange={(e) => setRowCount(e.target.value)}
-      />
+      >
+        <option value="3">3</option>
+        <option value="6">6</option>
+        <option value="9">9</option>
+        <option value="12">12</option>
+      </select>
       <label htmlFor="columnCount">Column Count</label>
-      <Input
-        placeholder="Column count"
-        type="number"
+      <select
+        className="w-full rounded-lg border border-gray-200 placeholder-gray-400 p-2"
         id="columnCount"
         name="columnCount"
         value={columnCount}
         onChange={(e) => setColumnCount(e.target.value)}
-      />
+      >
+        <option value="3">3</option>
+        <option value="6">6</option>
+        <option value="9">9</option>
+        <option value="12">12</option>
+      </select>
       <label htmlFor="canvasType">Canvas Type</label>
       <select
         className="w-full rounded-lg border border-gray-200 placeholder-gray-400 p-2"
