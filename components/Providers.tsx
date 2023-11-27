@@ -27,7 +27,21 @@ export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
       const localData = window.localStorage.getItem("localData");
       try {
         if (localData && localData !== undefined) {
-          return JSON.parse(localData);
+          const parsedData = JSON.parse(localData);
+
+          // Loop through the keys in defaultLocalData
+          for (const key of Object.keys(defaultLocalData)) {
+            // Check if the key from defaultLocalData is missing in parsedData
+            if (!parsedData.hasOwnProperty(key)) {
+              // If missing, add the key with its default value to parsedData
+              parsedData[key] = (defaultLocalData as any)[key];
+            }
+          }
+
+          // Update the stored data if any missing fields were added
+          window.localStorage.setItem("localData", JSON.stringify(parsedData));
+
+          return parsedData;
         } else {
           return defaultLocalData;
         }
