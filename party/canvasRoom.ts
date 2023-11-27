@@ -155,6 +155,7 @@ export default class CanvasRoomServer implements Party.Server {
     if (request.method === "DELETE") {
       await this.removeRoomFromRoomList(this.party.id);
       await this.party.storage.deleteAll();
+      this.canvas = undefined;
       return ok();
     }
 
