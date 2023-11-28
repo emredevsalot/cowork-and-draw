@@ -37,6 +37,8 @@ export interface ILocalData {
   focusSessions: number;
   autoStartNext: boolean;
   longRestInterval: number;
+  dailyFocusSessionsTarget: number;
+  dailyFocusSessionsCurrent: number;
 }
 
 export type LocalContextType = {

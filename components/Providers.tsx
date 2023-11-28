@@ -19,6 +19,8 @@ const defaultLocalData: ILocalData = {
   focusSessions: 0,
   autoStartNext: true,
   longRestInterval: 4,
+  dailyFocusSessionsTarget: 8,
+  dailyFocusSessionsCurrent: 0,
 };
 
 export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {

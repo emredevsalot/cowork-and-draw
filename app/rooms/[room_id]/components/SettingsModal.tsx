@@ -6,6 +6,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useLocalData } from "@/components/Providers";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+
+import DailySessionTargetIndicator from "./DailySessionTargetIndicator";
+
 import { ILocalData } from "@/app/types";
 
 type Props = {
@@ -37,6 +40,9 @@ const SettingsModal = ({ roomId }: Props) => {
   const [autoStartNext, setAutoStartNext] = useState(
     storageValues?.autoStartNext
   );
+  const [dailyFocusSessionsTarget, setDailyFocusSessionsTarget] = useState(
+    storageValues?.dailyFocusSessionsTarget
+  );
 
   // Tracks changes in setting values to enable 'Save Settings' button if any value has changed
   useEffect(() => {
@@ -46,6 +52,7 @@ const SettingsModal = ({ roomId }: Props) => {
       longRestDuration,
       longRestInterval,
       autoStartNext,
+      dailyFocusSessionsTarget,
     ];
 
     const originalValues = [
@@ -54,6 +61,7 @@ const SettingsModal = ({ roomId }: Props) => {
       storageValues?.longRestDuration,
       storageValues?.longRestInterval,
       storageValues?.autoStartNext,
+      storageValues?.dailyFocusSessionsTarget,
     ];
 
     // Check if any setting value has changed
@@ -68,6 +76,7 @@ const SettingsModal = ({ roomId }: Props) => {
     longRestDuration,
     longRestInterval,
     autoStartNext,
+    dailyFocusSessionsTarget,
     storageValues,
   ]);
 
@@ -120,6 +129,7 @@ const SettingsModal = ({ roomId }: Props) => {
       longRestDuration: longRestDuration,
       longRestInterval: longRestInterval,
       autoStartNext: autoStartNext,
+      dailyFocusSessionsTarget: dailyFocusSessionsTarget,
     };
     setStorageValues(updatedStorageValues);
     closeModal();
@@ -193,6 +203,28 @@ const SettingsModal = ({ roomId }: Props) => {
                 id="longRestInterval"
                 value={longRestInterval}
                 onChange={(e) => setLongRestInterval(Number(e.target.value))}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="dailyFocusSessionsTarget">
+                Daily Focus Session Target
+              </label>
+              <Input
+                placeholder="Daily Focus Session Target"
+                type="number"
+                id="dailyFocusSessionsTarget"
+                value={dailyFocusSessionsTarget}
+                onChange={(e) => {
+                  // Ensure the value is at least 1 or more
+                  const newValue = Number(e.target.value);
+                  const validatedValue = newValue >= 1 ? newValue : 1;
+                  setDailyFocusSessionsTarget(validatedValue);
+                }}
+              />
+              <DailySessionTargetIndicator
+                dailyFocusSessionsTarget={dailyFocusSessionsTarget}
+                longRestInterval={longRestInterval}
+                showResetAlways={true}
               />
             </div>
             <div className="flex items-center">

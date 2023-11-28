@@ -5,6 +5,7 @@ import { useLocalData } from "@/components/Providers";
 import { ILocalData, TimerOption } from "@/app/types";
 import Button from "@/components/Button";
 import SettingsModal from "./SettingsModal";
+import DailySessionTargetIndicator from "./DailySessionTargetIndicator";
 
 const useTimer = ({
   storageValues,
@@ -90,6 +91,7 @@ const useTimer = ({
     updatedStorageValues.timerStartedAt = currentTime;
     updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
     updatedStorageValues.focusSessions = 0; // Reset focus sessions after long rest
+    updatedStorageValues.dailyFocusSessionsCurrent += 1;
     return nextTimer;
   };
 
@@ -107,6 +109,7 @@ const useTimer = ({
     updatedStorageValues.timerStartedAt = currentTime;
     updatedStorageValues.timerStarted = updatedStorageValues.autoStartNext;
     updatedStorageValues.focusSessions = updatedFocusSessions;
+    updatedStorageValues.dailyFocusSessionsCurrent += 1;
     return nextTimer;
   };
 
@@ -268,6 +271,11 @@ const Timer = ({ roomId }: { roomId: string }) => {
     <div className="flex flex-col gap-4 items-center">
       <SettingsModal roomId={roomId} />
 
+      <DailySessionTargetIndicator
+        dailyFocusSessionsTarget={storageValues.dailyFocusSessionsTarget}
+        longRestInterval={storageValues.longRestInterval}
+        dailyFocusSessionsCurrent={storageValues.dailyFocusSessionsCurrent}
+      />
       {/* Timer options */}
       <div className="flex gap-4">
         {timerOptions.map((option) => (
